@@ -1,4 +1,6 @@
-from flask import Flask
+
+
+from flask import Flask, abort
 from flask import render_template
 
 
@@ -47,7 +49,8 @@ def student_details(id):
     if student:
         return student[0]
 
-    return "<h1>Not found </h1>"
+    # return "<h1>Not found </h1>"
+    abort(404)
 
 
 
@@ -84,9 +87,11 @@ def person_profile(id):
     person= list(filter(lambda p: p["id"]==id , persons))# filter object casted to list
     # print(list(student))
     if person:
-        return render_template("persons/show.html", person=person[0])
+        return render_template("persons/show.html",
+                               person=person[0], image=f"persons/{person[0]['image']}")
 
-    return "<h1>Not found </h1>"
+    # return "<h1>Not found </h1>"
+    abort(404)
 
 
 
@@ -104,7 +109,10 @@ def person_profile(id):
     in flask shell
     app.url_map
     app.url_map
+    # serving static files ---> inside folder static 
     Map([<Rule '/static/<filename>' (HEAD, GET, OPTIONS) -> static>,
+    
+    
            route    supported method    ---> endpoint  ==== function 
      <Rule '/' (HEAD, GET, OPTIONS) -> hello_world>,
      <Rule '/home/<user>' (HEAD, GET, OPTIONS) -> home>,
@@ -120,6 +128,13 @@ def person_profile(id):
 pip install flask-shell-ipython
 """
 
+### view --> 404 not found
+# define new route --> 404
+
+@app.errorhandler(404)
+def error_not_found(error):
+    # return "<h1> error </h1>"
+    return  render_template("404.html")
 
 
 # start server
