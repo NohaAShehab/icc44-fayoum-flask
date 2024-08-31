@@ -1,0 +1,4 @@
+1- install flask
+    pip install flask
+
+2- create my first project 
