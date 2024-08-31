@@ -1,4 +1,8 @@
 1- install flask
     pip install flask
 
-2- create my first project 
+2- create my first project
+
+
+3- render template
+https://flask.palletsprojects.com/en/3.0.x/quickstart/#rendering-templates

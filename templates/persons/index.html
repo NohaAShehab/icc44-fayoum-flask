@@ -1,0 +1,26 @@
+{% extends './base.html' %}
+
+{% block main %}
+    <h1> Welcome to persons </h1>
+    <h2> {{name}}: {{track}}</h2>
+    <h1> All Persons </h1>
+    <table class="table">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Image</th>
+            <th>Grade</th>
+            <th> Show</th>
+        </tr>
+        {% for p in persons %}
+            <tr>
+                <td> {{p['id']}}</td>
+                <td> {{p['name']}}</td>
+                <td> {{p['image']}}</td>
+                <td> {{p['grade']}}</td>
+
+                <td> <a href='{{ url_for("person.show", id=p["id"])}}' class="btn btn-info"> Show </a></td>
+            </tr>
+        {%endfor %}
+    </table>
+{% endblock %}
