@@ -137,6 +137,16 @@ def error_not_found(error):
     return  render_template("404.html")
 
 
+##########################33 **************** split route from view function *********************************
+def users():
+    return render_template("users.index.html")
+
+# I need route for this view ??
+app.add_url_rule("/users", view_func=users, endpoint='users.index')
+
+
+
+
 # start server
 if __name__ == "__main__":
     app.run(debug=True) # start development server for your flask app
