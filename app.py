@@ -1,6 +1,6 @@
+from crypt import methods
 
-
-from flask import Flask, abort
+from flask import Flask, abort, url_for, request, redirect
 from flask import render_template
 
 
@@ -144,6 +144,121 @@ def users():
 # I need route for this view ??
 app.add_url_rule("/users", view_func=users, endpoint='users.index')
 
+###############################################################################
+############# **** connection with databases ***********
+# flask
+# https://flask-sqlalchemy.palletsprojects.com/en/3.1.x/
+
+from flask_sqlalchemy import SQLAlchemy
+
+# define db url
+
+# initialize instance for my db . ==> connect sqlite
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
+# "sqlite:///test.db"
+# sqlite://generate db in projectdit /database.db
+# http://url
+
+# connect app with db ?
+db = SQLAlchemy(app) # connect db with flask app
+
+
+##
+class Employee(db.Model):
+    __tablename__ = 'employees'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    image = db.Column(db.String(250))
+    salary = db.Column(db.Integer)
+
+    def __str__(self):
+        return f"{self.name}"
+
+    @property
+    def image_url(self):
+        return url_for("static", filename=f"employees/{self.image}")
+
+    @property
+    def delete_url(self):
+        return  url_for("employees.delete", employee=self.id)
+
+    @property
+    def show_url(self):
+        return url_for("employees.show", employee=self.id)
+
+
+# ask app to connect to db --> and create table
+# in flask shell  --> db.create_all()
+# create table employees
+"""
+    create new object
+    go to flask shell
+    1- import model
+    from app import Employee
+    2- create new object
+    emp = Employee()
+    emp.name='noha'
+    emp.image='pic1.png'
+    emp.salary = 4455
+    # 3- save object 
+    db.session.add(emp)
+    db.session.commit()
+
+    # show all objects ?
+    # sqlalchemy use ? models functions to run dml on objects 
+    1- select * from employees
+    employees=Employee.query.all()
+
+
+    ### save new object 
+    emp2= Employee(name='ahmed',image='pic2.png', salary=1000)
+    db.session.add(emp2)
+    db.session.commit()
+    
+    
+    ### get one object --> show ??
+
+"""
+
+@app.route("/employees", endpoint="employees.index")
+def employees_index():
+    employees = Employee.query.all()
+    return render_template("employees/index.html", employees=employees)
+
+
+@app.route("/employees/<int:employee>", endpoint="employees.show")
+def employees_show(employee):
+    #
+    # employee = Employee.query.get(employee)
+    employee=  db.get_or_404(Employee, employee)
+    # return employee.name
+    return  render_template("employees/show.html", employee=employee)
+
+
+# where request object ? http request??
+# flask implicitly implement request ???
+@app.route("/employees/create", endpoint="employees.create", methods=['GET', "POST"])
+# default for request is get ?? if
+# you want use post --> you must explicitly say this in app route
+def employees_create():
+    # get post data ??
+    # print("request", request)
+    print(request.method, request.form)
+    if request.method == "POST":
+        emp = Employee(name=request.form["name"], image=request.form["image"], salary=request.form["salary"])
+        db.session.add(emp)
+        db.session.commit()
+        return  redirect(url_for("employees.index"))
+
+    return render_template("employees/create.html")
+
+
+@app.route("/employees/<int:employee>/delete", endpoint="employees.delete")
+def employees_delete(employee):
+    emp = db.get_or_404(Employee, employee)
+    db.session.delete(emp)
+    db.session.commit()
+    return redirect(url_for("employees.index"))
 
 
 

@@ -1,0 +1,31 @@
+{% extends './base.html' %}
+
+{% block main %}
+    <a href="{{url_for('employees.create')}}" class="btn btn-primary">Add New Employee </a>
+    <h1> All Employees </h1>
+
+    <table class="table">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Image</th>
+            <th>Salary</th>
+            <th> Show</th>
+             <th> Delete</th>
+        </tr>
+        {% for emp in employees %}
+            <tr>
+                <td> {{emp.id}}</td>
+                <td>{{emp.name}}</td>
+                <td>{{emp.image}}</td>
+                <td>{{emp.salary}}</td>
+                <td><a href="{{url_for('employees.show', employee=emp.id )}}" class="btn btn-info"> Show </a></td>
+
+                <td>
+
+                    <a href="{{emp.delete_url}}" class="btn btn-danger"> Delete </a></td>
+
+            </tr>
+        {%endfor %}
+    </table>
+{% endblock %}
