@@ -59,7 +59,7 @@ def land():
 
 # base template , then inherit --> persons --> return with response --> send it to the template
 
-@app.route("/persons")
+@app.route("/persons", endpoint='persons.index')
 def persons():
     persons = [
         {"id": 1, "name": "Mazen", "image": "pic1.png", "grade": 100},
@@ -71,7 +71,7 @@ def persons():
     return render_template("persons/index.html", name='noha', track="python", persons = persons)
 
 
-@app.route("/persons/<int:id>", endpoint="person.show")
+@app.route("/persons/<int:id>", endpoint="persons.show")
 def person_profile(id):
     persons = [
         {"id": 1, "name": "Mazen", "image": "pic1.png", "grade": 100},
@@ -93,8 +93,34 @@ def person_profile(id):
 # we need to start from terminal
 # open it
 # export FLASK_APP=app
-# export DEBUG=True
-# then run flask run
+# then run==> flask run --debug
+
+# to get more info about routes register in your app
+"""
+    # use command 
+    export FLASK_APP=app
+    flask shell 
+    
+    in flask shell
+    app.url_map
+    app.url_map
+    Map([<Rule '/static/<filename>' (HEAD, GET, OPTIONS) -> static>,
+           route    supported method    ---> endpoint  ==== function 
+     <Rule '/' (HEAD, GET, OPTIONS) -> hello_world>,
+     <Rule '/home/<user>' (HEAD, GET, OPTIONS) -> home>,
+     <Rule '/profile/<id>' (HEAD, GET, OPTIONS) -> profile>,
+     <Rule '/students' (HEAD, GET, OPTIONS) -> students>,
+     <Rule '/students/<id>' (HEAD, GET, OPTIONS) -> student_details>,
+     <Rule '/landing' (HEAD, GET, OPTIONS) -> land>,
+     <Rule '/persons' (HEAD, GET, OPTIONS) -> persons>,
+     <Rule '/persons/<id>' (HEAD, GET, OPTIONS) -> persons.show>])
+
+
+# before using flask_shell  --> install package ? flask-ipython-shell
+pip install flask-shell-ipython
+"""
+
+
 
 # start server
 if __name__ == "__main__":

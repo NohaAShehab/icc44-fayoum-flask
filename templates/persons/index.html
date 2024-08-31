@@ -19,7 +19,7 @@
                 <td> {{p['image']}}</td>
                 <td> {{p['grade']}}</td>
 
-                <td> <a href='{{ url_for("person.show", id=p["id"])}}' class="btn btn-info"> Show </a></td>
+                <td> <a href='{{ url_for("persons.show", id=p["id"])}}' class="btn btn-info"> Show </a></td>
             </tr>
         {%endfor %}
     </table>
